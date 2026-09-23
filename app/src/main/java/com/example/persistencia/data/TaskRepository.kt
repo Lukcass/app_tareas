@@ -21,4 +21,8 @@ class TaskRepository(private val taskDao: TaskDao) {
     suspend fun delete(task: Task) {
         taskDao.deleteTask(task)
     }
+
+    suspend fun getUnsyncedTasks(): List<Task> {
+        return taskDao.getUnsyncedTasks()
+    }
 }

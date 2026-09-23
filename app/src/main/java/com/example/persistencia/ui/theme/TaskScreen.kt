@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,7 +33,15 @@ fun TaskScreen(taskViewModel: TaskViewModel = viewModel()) {
                 title = { Text("Gestor de Tareas (Offline-First)") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                ),
+                actions = {
+                    IconButton(onClick = { taskViewModel.syncTasks() }) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Sincronizar Tareas"
+                        )
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -143,6 +152,11 @@ fun TaskItem(
                     text = "Creado: $fechaFormateada",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.outline
+                )
+                Text(
+                    text = if (task.isSynced) "• Sincronizado" else "• Pendiente de sincronizar",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = if (task.isSynced) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                 )
             }
             IconButton(onClick = onEdit) {

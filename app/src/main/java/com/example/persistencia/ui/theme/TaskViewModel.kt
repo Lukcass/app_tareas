@@ -68,4 +68,14 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
             repository.delete(task)
         }
     }
+
+    fun syncTasks() {
+        viewModelScope.launch {
+            val pendientes = repository.getUnsyncedTasks()
+            pendientes.forEach { task ->
+                // Simula el envío a red y marca como sincronizado localmente
+                repository.update(task.copy(isSynced = true))
+            }
+        }
+    }
 }
