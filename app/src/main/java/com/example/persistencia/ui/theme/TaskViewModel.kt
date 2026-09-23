@@ -71,11 +71,9 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
     fun syncTasks() {
         viewModelScope.launch {
-            val pendientes = repository.getUnsyncedTasks()
-            pendientes.forEach { task ->
-                // Simula el envío a red y marca como sincronizado localmente
-                repository.update(task.copy(isSynced = true))
-            }
+            tasks.value
+                .filter { !it.isSynced }
+                .forEach { task -> repository.update(task.copy(isSynced = true)) }
         }
     }
 }

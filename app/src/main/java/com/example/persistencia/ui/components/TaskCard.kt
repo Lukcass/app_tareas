@@ -86,15 +86,6 @@ fun TaskCard(
                     color = AppColors.Ink,
                     textDecoration = if (task.estadoCompletado) TextDecoration.LineThrough else TextDecoration.None
                 )
-                if (task.descripcion.isNotBlank()) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = task.descripcion,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = AppColors.InkSoft,
-                        textDecoration = if (task.estadoCompletado) TextDecoration.LineThrough else TextDecoration.None
-                    )
-                }
             }
 
             Box(modifier = Modifier.padding(top = 5.dp)) {
