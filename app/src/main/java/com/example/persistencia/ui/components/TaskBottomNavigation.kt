@@ -1,48 +1,76 @@
 package com.example.persistencia.ui.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import com.example.persistencia.ui.theme.AppColors
 
-/** Pestaña seleccionada: 0 = Buscar por fecha, 1 = Todas las tareas. */
+private data class NavTab(val label: String, val icon: ImageVector)
+
+private val tabs = listOf(
+    NavTab("Buscar", Icons.Outlined.Search),
+    NavTab("Todas", Icons.AutoMirrored.Outlined.List),
+    NavTab("Completadas", Icons.Outlined.CheckCircle)
+)
+
+/** Pestaña seleccionada: 0 = Buscar por fecha, 1 = Todas las tareas, 2 = Completadas. */
 @Composable
 fun TaskBottomNavigation(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit
 ) {
-    NavigationBar(containerColor = AppColors.Paper) {
-        NavigationBarItem(
-            selected = selectedTab == 0,
-            onClick = { onTabSelected(0) },
-            icon = { Icon(Icons.Outlined.Search, contentDescription = "Buscar") },
-            label = { Text("Buscar") },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = AppColors.AccentStrong,
-                selectedTextColor = AppColors.AccentStrong,
-                unselectedIconColor = AppColors.InkFaint,
-                unselectedTextColor = AppColors.InkFaint,
-                indicatorColor = AppColors.AccentSoft
-            )
-        )
-        NavigationBarItem(
-            selected = selectedTab == 1,
-            onClick = { onTabSelected(1) },
-            icon = { Icon(Icons.AutoMirrored.Outlined.List, contentDescription = "Todas las tareas") },
-            label = { Text("Todas las tareas") },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = AppColors.AccentStrong,
-                selectedTextColor = AppColors.AccentStrong,
-                unselectedIconColor = AppColors.InkFaint,
-                unselectedTextColor = AppColors.InkFaint,
-                indicatorColor = AppColors.AccentSoft
-            )
-        )
+    Box(
+        modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 16.dp, vertical = 10.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(28.dp))
+                .background(AppColors.Paper)
+                .padding(horizontal = 6.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            tabs.forEachIndexed { index, tab ->
+                val isSelected = index == selectedTab
+                val pillBg by animateColorAsState(if (isSelected) AppColors.AccentStrong else Color.Transparent, label = "pillBg")
+                val contentColor by animateColorAsState(if (isSelected) Color.White else AppColors.InkFaint, label = "contentColor")
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(18.dp))
+                        .background(pillBg)
+                        .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
+                            onTabSelected(index)
+                        }
+                        .padding(horizontal = 18.dp, vertical = 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = tab.icon,
+                        contentDescription = tab.label,
+                        tint = contentColor,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+            }
+        }
     }
 }

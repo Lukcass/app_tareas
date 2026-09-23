@@ -14,17 +14,20 @@ import com.example.persistencia.ui.components.EmptyTasksView
 import com.example.persistencia.ui.components.TaskCard
 import com.example.persistencia.ui.theme.AppColors
 
+/** Pantalla "Completadas": filtra en memoria, sin tocar el DAO. */
 @Composable
-fun AllTasksScreen(
+fun CompletedTasksScreen(
     tasks: List<Task>,
     onToggleTask: (Task) -> Unit,
     onViewTask: (Task) -> Unit,
     onEditTask: (Task) -> Unit,
     onDeleteTask: (Task) -> Unit
 ) {
+    val completedTasks = tasks.filter { it.estadoCompletado }
+
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "Todas las tareas",
+            text = "Completadas",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Medium,
             color = AppColors.Ink,
@@ -32,14 +35,14 @@ fun AllTasksScreen(
         )
 
         Box(modifier = Modifier.weight(1f)) {
-            if (tasks.isEmpty()) {
-                EmptyTasksView("No hay tareas registradas.")
+            if (completedTasks.isEmpty()) {
+                EmptyTasksView("Aún no completas tareas.")
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(bottom = 96.dp)
                 ) {
-                    items(tasks, key = { it.id }) { task ->
+                    items(completedTasks, key = { it.id }) { task ->
                         Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 5.dp)) {
                             TaskCard(
                                 task = task,

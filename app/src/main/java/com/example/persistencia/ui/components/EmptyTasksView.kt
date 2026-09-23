@@ -1,7 +1,7 @@
 package com.example.persistencia.ui.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,18 +12,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.persistencia.ui.theme.AppColors
 
-/** Estado vacío reutilizable para cuando no hay tareas que mostrar. */
+/** Estado vacío reutilizable, centrado en todo el espacio disponible. */
 @Composable
 fun EmptyTasksView(message: String = "Sin tareas registradas.") {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp),
+        modifier = Modifier.fillMaxSize().padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = message,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.titleMedium,
             color = AppColors.InkFaint,
             textAlign = TextAlign.Center
         )

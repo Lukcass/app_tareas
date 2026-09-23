@@ -12,6 +12,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,10 +24,8 @@ import com.example.persistencia.ui.theme.AppColors
 import com.example.persistencia.ui.utils.DateUtils
 
 /**
- * Calendario mensual reutilizable. Los días son círculos perfectos
- * (mismo width/height + CircleShape), con verde translúcido para días
- * normales, verde fuerte para el seleccionado y un punto indicador
- * para los días que tienen tareas.
+ * Calendario mensual reutilizable. offset/daysInMonth se recalculan
+ * solo cuando cambian year/month (remember), no en cada recomposición.
  */
 @Composable
 fun TaskCalendar(
@@ -39,8 +38,10 @@ fun TaskCalendar(
     onNextMonth: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val offset = remember(year, month) { DateUtils.firstDayOffset(year, month) }
+    val daysInMonth = remember(year, month) { DateUtils.daysInMonth(year, month) }
+
     Column(modifier = modifier) {
-        // Fila de mes con navegación
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,7 +59,6 @@ fun TaskCalendar(
             RoundNavButton(icon = Icons.AutoMirrored.Filled.KeyboardArrowRight, onClick = onNextMonth)
         }
 
-        // Encabezado de días de la semana
         Row(modifier = Modifier.fillMaxWidth()) {
             DateUtils.weekdaysShortEs.forEach { label ->
                 Text(
@@ -73,8 +73,6 @@ fun TaskCalendar(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        val offset = DateUtils.firstDayOffset(year, month)
-        val daysInMonth = DateUtils.daysInMonth(year, month)
         val totalCells = offset + daysInMonth
         val rows = (totalCells + 6) / 7
 
@@ -130,7 +128,7 @@ private fun CalendarDay(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = Modifier
-                .size(size) // width = height -> círculo perfecto
+                .size(size)
                 .clip(CircleShape)
                 .background(background)
                 .clickable { onClick() },

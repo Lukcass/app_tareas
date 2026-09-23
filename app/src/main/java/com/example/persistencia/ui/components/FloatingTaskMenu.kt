@@ -1,6 +1,10 @@
 package com.example.persistencia.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -8,21 +12,18 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.persistencia.ui.theme.AppColors
+import com.example.persistencia.ui.theme.AppShapes
 
-/**
- * Menú flotante de acciones de una tarea (sustituye a los dos IconButton
- * fijos debajo de la tarjeta). Aparece flotando sobre la interfaz al
- * pulsar el botón "⋮" de TaskCard.
- *
- * Preparado para 2 acciones principales (Actualizar / Eliminar) y ya
- * incluye una tercera (Consultar) fácilmente ampliable con más botones.
- */
+/** Menú flotante de acciones de la tarea, con icono en chip circular (estilo Mova). */
 @Composable
 fun FloatingTaskMenu(
     expanded: Boolean,
@@ -34,23 +35,34 @@ fun FloatingTaskMenu(
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
-        shape = com.example.persistencia.ui.theme.AppShapes.MenuShape,
+        shape = AppShapes.MenuShape,
         modifier = Modifier.padding(4.dp)
     ) {
-        DropdownMenuItem(
-            text = { Text("Consultar") },
-            leadingIcon = { Icon(Icons.Filled.Visibility, contentDescription = null, tint = AppColors.InkSoft) },
-            onClick = onViewTask
-        )
-        DropdownMenuItem(
-            text = { Text("Actualizar") },
-            leadingIcon = { Icon(Icons.Filled.Edit, contentDescription = null, tint = AppColors.Accent) },
-            onClick = onEditTask
-        )
-        DropdownMenuItem(
-            text = { Text("Eliminar", color = AppColors.Danger) },
-            leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = null, tint = AppColors.Danger) },
-            onClick = onDeleteTask
-        )
+        MenuAction("Consultar", Icons.Filled.Visibility, AppColors.AccentSoft, AppColors.AccentStrong, onClick = onViewTask)
+        MenuAction("Actualizar", Icons.Filled.Edit, AppColors.AccentSoft, AppColors.AccentStrong, onClick = onEditTask)
+        MenuAction("Eliminar", Icons.Filled.Delete, AppColors.DangerSoft, AppColors.Danger, textColor = AppColors.Danger, onClick = onDeleteTask)
     }
+}
+
+@Composable
+private fun MenuAction(
+    label: String,
+    icon: ImageVector,
+    chipBackground: Color,
+    iconTint: Color,
+    textColor: Color = AppColors.Ink,
+    onClick: () -> Unit
+) {
+    DropdownMenuItem(
+        text = { Text(label, color = textColor) },
+        leadingIcon = {
+            Box(
+                modifier = Modifier.size(30.dp).clip(CircleShape).background(chipBackground),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(imageVector = icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(16.dp))
+            }
+        },
+        onClick = onClick
+    )
 }
