@@ -28,4 +28,7 @@ interface TaskDao {
 
     @Query("DELETE FROM tasks")
     suspend fun deleteAllTasks()
+
+    @Query("SELECT * FROM tasks WHERE is_synced = 0")
+    suspend fun getUnsyncedTasks(): List<Task>
 }
