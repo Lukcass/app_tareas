@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.example.persistencia.ui.theme.AppColors
 import com.example.persistencia.ui.theme.AppShapes
 
@@ -36,7 +37,11 @@ fun FloatingTaskMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
         shape = AppShapes.MenuShape,
-        modifier = Modifier.padding(4.dp)
+        modifier = Modifier.padding(4.dp),
+        // focusable = false: es un menú de solo botones, no un campo de
+        // texto. Sin esto, cada apertura pide foco y arma el manejo de
+        // back-press del sistema, que es lo que se sentía como lentitud.
+        properties = PopupProperties(focusable = false)
     ) {
         MenuAction("Consultar", Icons.Filled.Visibility, AppColors.AccentSoft, AppColors.AccentStrong, onClick = onViewTask)
         MenuAction("Actualizar", Icons.Filled.Edit, AppColors.AccentSoft, AppColors.AccentStrong, onClick = onEditTask)

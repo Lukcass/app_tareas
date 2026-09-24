@@ -6,12 +6,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.persistencia.data.Task
 import com.example.persistencia.ui.components.EmptyTasksView
 import com.example.persistencia.ui.components.TaskCard
+import com.example.persistencia.ui.components.TaskSearchBar
 import com.example.persistencia.ui.theme.AppColors
 
 /** Pantalla "Pendientes": filtra en memoria, sin tocar el DAO. */
@@ -23,7 +29,11 @@ fun PendingTasksScreen(
     onEditTask: (Task) -> Unit,
     onDeleteTask: (Task) -> Unit
 ) {
-    val pendingTasks = tasks.filter { !it.estadoCompletado }
+    var query by rememberSaveable { mutableStateOf("") }
+    val pendingTasks = remember(tasks, query) {
+        tasks.filter { !it.estadoCompletado }
+            .filter { query.isBlank() || it.titulo.contains(query, ignoreCase = true) }
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -34,9 +44,11 @@ fun PendingTasksScreen(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp)
         )
 
+        TaskSearchBar(query = query, onQueryChange = { query = it })
+
         Box(modifier = Modifier.weight(1f)) {
             if (pendingTasks.isEmpty()) {
-                EmptyTasksView("No tienes tareas pendientes.")
+                EmptyTasksView(if (query.isBlank()) "No tienes tareas pendientes." else "Sin resultados para \"$query\".")
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),

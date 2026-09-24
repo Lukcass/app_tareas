@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -28,14 +29,18 @@ fun TaskAppScreen(
     onEditTask: (Task) -> Unit,
     onViewTask: (Task) -> Unit
 ) {
-    var selectedTab by remember { mutableIntStateOf(0) }
+    // rememberSaveable (no remember): esta pantalla sale de composición al
+    // navegar a "add"/"edit"/"view" y se recrea al volver. Con remember a
+    // secas, selectedTab (y el calendario) se reiniciaban a sus valores por
+    // defecto cada vez, por eso siempre volvía a la pestaña 0 ("Buscar").
+    var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 
     // Estado del calendario de "Buscar", vive aquí para no reiniciarse
     // al cambiar de pestaña y volver.
     val (todayYear, todayMonth, todayDay) = remember { DateUtils.currentYearMonthDay() }
-    var searchYear by remember { mutableIntStateOf(todayYear) }
-    var searchMonth by remember { mutableIntStateOf(todayMonth) }
-    var searchSelectedDay by remember { mutableIntStateOf(todayDay) }
+    var searchYear by rememberSaveable { mutableIntStateOf(todayYear) }
+    var searchMonth by rememberSaveable { mutableIntStateOf(todayMonth) }
+    var searchSelectedDay by rememberSaveable { mutableIntStateOf(todayDay) }
 
     Scaffold(
         containerColor = AppColors.Background,

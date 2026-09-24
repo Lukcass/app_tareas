@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import com.example.persistencia.ui.screens.TaskAppScreen
+import com.example.persistencia.ui.navigation.TaskNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Surface {
-                    TaskAppScreen()
+                    TaskNavHost()
                 }
             }
         }
