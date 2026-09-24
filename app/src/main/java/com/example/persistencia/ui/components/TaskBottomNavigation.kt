@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.PendingActions
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -27,10 +28,11 @@ private data class NavTab(val label: String, val icon: ImageVector)
 private val tabs = listOf(
     NavTab("Buscar", Icons.Outlined.Search),
     NavTab("Todas", Icons.AutoMirrored.Outlined.List),
+    NavTab("Pendientes", Icons.Outlined.PendingActions),
     NavTab("Completadas", Icons.Outlined.CheckCircle)
 )
 
-/** Pestaña seleccionada: 0 = Buscar por fecha, 1 = Todas las tareas, 2 = Completadas. */
+/** Pestaña seleccionada: 0 = Buscar por fecha, 1 = Todas, 2 = Pendientes, 3 = Completadas. */
 @Composable
 fun TaskBottomNavigation(
     selectedTab: Int,
@@ -60,14 +62,14 @@ fun TaskBottomNavigation(
                         .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
                             onTabSelected(index)
                         }
-                        .padding(horizontal = 18.dp, vertical = 10.dp),
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = tab.icon,
                         contentDescription = tab.label,
                         tint = contentColor,
-                        modifier = Modifier.size(22.dp)
+                        modifier = Modifier.size(21.dp)
                     )
                 }
             }
