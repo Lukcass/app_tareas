@@ -88,20 +88,27 @@ fun TaskCard(
                 )
             }
 
-            Box(modifier = Modifier.padding(top = 5.dp)) {
+            // Zona táctil de 48dp (antes 30dp) para que sea fácil acertar el botón.
+            // El círculo visible es un poco más grande y queda centrado dentro de esa zona.
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .clickable { menuExpanded = true },
+                contentAlignment = Alignment.Center
+            ) {
                 Box(
                     modifier = Modifier
-                        .size(30.dp)
+                        .size(36.dp)
                         .clip(CircleShape)
-                        .background(AppColors.AccentSoft)
-                        .clickable { menuExpanded = true },
+                        .background(AppColors.AccentSoft),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Filled.MoreVert,
                         contentDescription = "Acciones de la tarea",
                         tint = AppColors.AccentStrong,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                 }
                 FloatingTaskMenu(

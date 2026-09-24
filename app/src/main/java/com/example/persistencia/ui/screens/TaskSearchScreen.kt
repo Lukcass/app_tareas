@@ -91,7 +91,8 @@ fun TaskSearchScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 16.dp)
+                    // Espacio al final para que el botón + no tape la última tarjeta
+                    contentPadding = PaddingValues(bottom = 96.dp)
                 ) {
                     items(dayTasks, key = { it.id }) { task ->
                         Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 5.dp)) {
